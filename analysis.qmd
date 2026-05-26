@@ -37,8 +37,7 @@ prosopis <- gs %>%
   range_read(ss = .,sheet = "prosopis")
 ```
 
-#porcentaje de germinación 
-
+# Indice de germinacion
 ```{r}
 gsm <- ger_summary(
   factors = c("rep", "nacl", "temp"), 
@@ -48,9 +47,32 @@ gsm <- ger_summary(
   data = fb                           
 )
 
+
+
+
 # Imprimir el resultado en la consola
 print(gsm)
 ```
+
+#porcentaje de germinación 
+
+```{r}
+library(knitr)
+
+# ANOVA
+av <- aov(mgt ~ nacl * temp + rep, data = gsm)
+
+# Prueba de comparación de medias (SNK)
+mc_mgt <- ger_testcomp(
+  aov  = av,
+  comp = c("nacl", "temp"),
+  type = "snk"
+)
+
+# Tabla
+mc_mgt$table |> kable(caption = "Mean germination time comparison")
+```
+
  
 # Grafico PORCENTAJE DE GERMINACION
 
@@ -79,6 +101,23 @@ gsm |>
     se_mgt   = sd(mgt) / sqrt(n()),
     .by = c(nacl, temp)
   ) 
+```
+
+```{r}
+library(knitr)
+
+# ANOVA
+av <- aov(mgt ~ nacl * temp + rep, data = gsm)
+
+# Prueba de comparación de medias (SNK)
+mc_mgt <- ger_testcomp(
+  aov  = av,
+  comp = c("nacl", "temp"),
+  type = "snk"
+)
+
+# Tabla
+mc_mgt$table |> kable(caption = "Mean germination time comparison")
 ```
 
 # GRAFICO TIEMPO MEDIO DE GERMINACION
